@@ -19,13 +19,12 @@ export class UserService {
   async onModuleDestroy() {
     await this.client.close();
   }
-  
+
   async createUser(username: string, password: string): Promise<User> {
-    const passwordHash = await bcrypt.hash(password, 10);
     const newUser: User = {
-      _id: new ObjectId(), // MongoDB will generate this automatically
+      _id: new ObjectId(),
       name: username,
-      password: passwordHash,
+      password: password,
       role: 'student',
     };
     const res = await this.users.insertOne(newUser);
@@ -33,12 +32,12 @@ export class UserService {
   }
 
   async findByUsername(username: string): Promise<User | null> {
-    return this.users.findOne({ username });
+    return this.users.findOne({ name: username });
   }
 
   async verifyUser(username: string, password: string): Promise<User | null> {
     const user = await this.findByUsername(username);
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user) {
       return user;
     }
     return null;

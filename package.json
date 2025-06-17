@@ -4,10 +4,12 @@
   "scripts": {
     "dev:client": "cd apps/client && npm run dev",
     "dev:server": "cd apps/server && npm run start:dev",
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\""
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "build": "cd apps/server && npm run build && cd ../client && npm run build"
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3",
+    "@types/styled-components": "^5.1.34",
     "concurrently": "^8.2.2"
   },
   "dependencies": {
@@ -23,6 +25,7 @@
     "react-router-dom": "^7.6.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
+    "styled-components": "^6.1.19",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
