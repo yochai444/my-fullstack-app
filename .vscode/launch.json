@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Run Fullstack App",
+      "configurations": ["Debug Frontend", "Debug Backend"]
+    }
+  ],
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Backend",
+      "cwd": "${workspaceFolder}/apps/server",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:debug"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Frontend",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/apps/client",
+      "preLaunchTask": "Start Frontend"
+    }
+  ]
+}
