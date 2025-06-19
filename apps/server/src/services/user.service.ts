@@ -37,7 +37,7 @@ export class UserService {
 
   async verifyUser(username: string, password: string): Promise<User | null> {
     const user = await this.findByUsername(username);
-    if (user) {
+    if (user && user.password === password) {
       return user;
     }
     return null;

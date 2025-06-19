@@ -11,12 +11,14 @@ export const FullScreenContainer = styled.div`
   direction: rtl;
 `;
 export const ErrorMessage = styled.div`
-  color: #ff5555;
-  background-color: #2c0000;
+  color: #fffff;
+  background-color: white;
   padding: 0.5rem;
   border-radius: 0.5rem;
   font-size: 0.9rem;
   text-align: center;
+  border: 1px solid #ff0000;
+  font-family: system-ui;
 `;
 
 export const LoginBox = styled.div`
@@ -32,6 +34,7 @@ export const LoginBox = styled.div`
 export const Title = styled.h1`
   font-size: 2rem;
   margin-bottom: 1.5rem;
+  font-family: system-ui;
 `;
 
 export const StyledForm = styled.form`
@@ -45,15 +48,17 @@ export const StyledInput = styled.input`
   font-size: 1rem;
   border-radius: 0.5rem;
   border: 1px solid #ccc;
+  font-family: system-ui;
 `;
 
 export const StyledButton = styled.button`
   padding: 0.75rem;
   font-size: 1.1rem;
-  background-color: #1976d2;
+  background-color: #214787;
   color: white;
   border: none;
   border-radius: 0.5rem;
+  font-family: system-ui;
   cursor: pointer;
 
   &:hover {

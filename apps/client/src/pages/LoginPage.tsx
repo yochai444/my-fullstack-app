@@ -24,11 +24,11 @@ export default function LoginPage() {
       const url = "http://localhost:3000/auth/login";
       const res = await axios.post(url, { username, password });
 
-      localStorage.setItem("token", res.data.token);
-      setError(""); // נקה שגיאה אם הצליח
-      nav("/home");
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setError("");
+      nav(`/:user`);
     } catch (err) {
-      setError("פעולה נכשלה. ודא שהנתונים תקינים");
+      setError("שם משתשמ ו/או סיסמה שגויים");
     }
   };
 
