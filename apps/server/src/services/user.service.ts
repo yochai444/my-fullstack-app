@@ -1,7 +1,6 @@
-import { Injectable, Inject, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { MongoClient, ObjectId } from 'mongodb';
 import { User } from '../types/userTypes';
-import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {

@@ -2,25 +2,26 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import StudentPage from "./StudentPage";
 import AdminPage from "./AdminPage";
-import LoginPage from "./LoginPage";
 
-type Props = {
-  userToken: {
-    role?: string;
-    name?: string;
-  } | null;
-};
+export interface IUserToken {
+  role: string;
+  name: string;
+  sub: string;
+}
 
-export default function MainPage({ userToken }: Props) {
+interface MainPageProps {
+  userToken: IUserToken;
+}
+
+export default function MainPage({ userToken }: MainPageProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userToken?.role) 
-      navigate("/login");
-        return;
+    if (!userToken?.role) navigate("/login");
+    return;
   }, [userToken, navigate]);
 
   if (userToken?.role === "student") return <StudentPage />;
   if (userToken?.role === "admin") return <AdminPage />;
-  return null; 
+  return;
 }

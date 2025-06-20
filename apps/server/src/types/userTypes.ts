@@ -6,3 +6,10 @@ export interface User {
   password: string;
   role: 'student' | 'admin';
 }
+
+export interface Files {
+  studentId: string;
+  name: string;
+  url: string;
+  uploadedAt: Date;
+}
