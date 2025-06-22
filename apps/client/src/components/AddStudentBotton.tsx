@@ -11,28 +11,39 @@ import {
   Title,
 } from "../pages/Login.styled";
 import axios from "axios";
+import { useForm } from "react-hook-form";
+
+type FormInputs = {
+  username: string;
+  password: string;
+};
 
 export default function AddStudentButton() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+  const [serverError, setServerError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormInputs>();
+
+  const onSubmit = async (data: FormInputs) => {
     try {
-      const url = "http://localhost:3000/users/create";
-      const res = await axios.post(url, { username, password });
+      const token = localStorage.getItem("token");
+      const res = await axios.post("http://localhost:3000/users/create", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      setError("");
-      handleClose();
-    } catch (err) {
-      setError("בעיה ביצירת משתמש חדש");
+      setServerError("");
+      reset();
+      setOpen(false);
+    } catch {
+      setServerError("בעיה ביצירת משתמש חדש");
     }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
@@ -44,7 +55,6 @@ export default function AddStudentButton() {
       <Popper
         open={open}
         anchorEl={null}
-        modifiers={[]}
         style={{
           position: "fixed",
           top: "50%",
@@ -53,12 +63,11 @@ export default function AddStudentButton() {
           zIndex: 1300,
         }}
       >
-        <ClickAwayListener onClickAway={handleClose}>
+        <ClickAwayListener onClickAway={() => setOpen(false)}>
           <FullScreenContainer>
             <LoginBox style={{ position: "relative" }}>
-              {/* כפתור סגירה */}
               <IconButton
-                onClick={handleClose}
+                onClick={() => setOpen(false)}
                 style={{ position: "absolute", top: 8, left: 8 }}
                 aria-label="סגור"
               >
@@ -66,21 +75,26 @@ export default function AddStudentButton() {
               </IconButton>
 
               <Title>יצירת משתמש חדש</Title>
-              <StyledForm onSubmit={handleSubmit}>
+              <StyledForm onSubmit={handleSubmit(onSubmit)} noValidate>
                 <StyledInput
                   placeholder="שם משתמש"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
+                  {...register("username", { required: "שדה חובה" })}
                 />
+                {errors.username && (
+                  <ErrorMessage>{errors.username.message}</ErrorMessage>
+                )}
+
                 <StyledInput
                   type="password"
                   placeholder="סיסמה"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register("password", { required: "שדה חובה" })}
                 />
-                {error && <ErrorMessage>{error}</ErrorMessage>}
+                {errors.password && (
+                  <ErrorMessage>{errors.password.message}</ErrorMessage>
+                )}
+
+                {serverError && <ErrorMessage>{serverError}</ErrorMessage>}
+
                 <StyledButton type="submit">צור משתמש</StyledButton>
               </StyledForm>
             </LoginBox>

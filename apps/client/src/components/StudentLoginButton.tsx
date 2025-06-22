@@ -9,8 +9,6 @@ export default function StudentLogButton() {
   if (open) nav("/login");
 
   return (
-    <StyledButton onClick={() => setOpen((prev) => !prev)}>
-      כניסת תלמידים
-    </StyledButton>
+    <StyledButton onClick={() => setOpen((prev) => !prev)}>כניסה</StyledButton>
   );
 }

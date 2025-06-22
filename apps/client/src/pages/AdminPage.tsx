@@ -1,11 +1,33 @@
 import { Box, Typography } from "@mui/material";
-import type { IUserToken } from "./MainPage";
 import AddStudentButton from "../components/AddStudentBotton";
 import AddFilesButton from "../components/AddFilesBotton";
+import { jwtDecode } from "jwt-decode";
+
+interface IUserToken {
+  role: string;
+  name: string;
+  sub: string;
+}
+
 export default function AdminPage() {
-  const userToken = JSON.parse(
-    localStorage.getItem("user") || "null"
-  ) as IUserToken;
+  let userToken: IUserToken | null = null;
+
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      userToken = jwtDecode<IUserToken>(token);
+    }
+  } catch {
+    userToken = null;
+  }
+
+  if (!userToken) {
+    return (
+      <Box padding={4}>
+        <Typography>משתמש לא מחובר</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ direction: "rtl", fontFamily: "system-ui" }}>

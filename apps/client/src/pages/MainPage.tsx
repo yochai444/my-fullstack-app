@@ -1,27 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import StudentPage from "./StudentPage";
 import AdminPage from "./AdminPage";
 
-export interface IUserToken {
+interface IUserToken {
   role: string;
   name: string;
   sub: string;
 }
 
-interface MainPageProps {
-  userToken: IUserToken;
-}
-
-export default function MainPage({ userToken }: MainPageProps) {
+export default function MainPage() {
   const navigate = useNavigate();
+  const [userToken, setUserToken] = useState<IUserToken | null>(null);
 
   useEffect(() => {
-    if (!userToken?.role) navigate("/login");
-    return;
-  }, [userToken, navigate]);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No token");
 
-  if (userToken?.role === "student") return <StudentPage />;
-  if (userToken?.role === "admin") return <AdminPage />;
-  return;
+      const decoded = jwtDecode<IUserToken>(token);
+      setUserToken(decoded);
+    } catch (err) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  if (!userToken) return null;
+
+  if (userToken.role === "student") return <StudentPage />;
+  if (userToken.role === "admin") return <AdminPage />;
+  return null;
 }

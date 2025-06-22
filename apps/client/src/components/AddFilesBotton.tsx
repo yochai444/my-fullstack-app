@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Popper, ClickAwayListener, IconButton } from "@mui/material";
+import {
+  Popper,
+  IconButton,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   ErrorMessage,
@@ -11,27 +18,41 @@ import {
   Title,
 } from "../pages/Login.styled";
 import axios from "axios";
+import { useForm, Controller } from "react-hook-form";
+
+type FormInputs = {
+  username: string;
+  urlFiles: string;
+  fileType: string;
+  fileName: string;
+};
+
 export default function AddFilesButton() {
-  const [username, setUsername] = useState("");
-  const [urlFiles, setUrlFiles] = useState("");
-  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+  const [serverError, setServerError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormInputs>({
+    defaultValues: { username: "", urlFiles: "", fileType: "", fileName: "" },
+  });
+
+  const onSubmit = async (data: FormInputs) => {
     try {
-      const url = "http://localhost:3000/files/upload";
-      const res = await axios.post(url, { username, urlFiles });
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      setError("");
-      handleClose();
-    } catch (err) {
-      setError("בעיה בהוספת קובץ חדש");
+      const token = localStorage.getItem("token");
+      await axios.post("http://localhost:3000/files/upload", data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setServerError("");
+      reset();
+      setOpen(false);
+    } catch {
+      setServerError("בעיה בהוספת קובץ חדש");
     }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
@@ -43,7 +64,6 @@ export default function AddFilesButton() {
       <Popper
         open={open}
         anchorEl={null}
-        modifiers={[]}
         style={{
           position: "fixed",
           top: "50%",
@@ -52,38 +72,76 @@ export default function AddFilesButton() {
           zIndex: 1300,
         }}
       >
-        <ClickAwayListener onClickAway={handleClose}>
-          <FullScreenContainer>
-            <LoginBox style={{ position: "relative" }}>
-              <IconButton
-                onClick={handleClose}
-                style={{ position: "absolute", top: 8, left: 8 }}
-                aria-label="סגור"
-              >
-                <CloseIcon />
-              </IconButton>
+        <FullScreenContainer>
+          <LoginBox style={{ position: "relative" }}>
+            <IconButton
+              onClick={() => setOpen(false)}
+              style={{ position: "absolute", top: 8, left: 8 }}
+              aria-label="סגור"
+            >
+              <CloseIcon />
+            </IconButton>
 
-              <Title>הוסף קובץ לתלמיד</Title>
-              <StyledForm onSubmit={handleSubmit}>
-                <StyledInput
-                  placeholder="שם משתמש"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-                <StyledInput
-                  type="fileUrl"
-                  placeholder="קישור לקובץ"
-                  value={urlFiles}
-                  onChange={(e) => setUrlFiles(e.target.value)}
-                  required
-                />
-                {error && <ErrorMessage>{error}</ErrorMessage>}
-                <StyledButton type="submit"> צור קובץ</StyledButton>
-              </StyledForm>
-            </LoginBox>
-          </FullScreenContainer>
-        </ClickAwayListener>
+            <Title>הוסף קובץ לתלמיד</Title>
+
+            <StyledForm onSubmit={handleSubmit(onSubmit)} noValidate>
+              <StyledInput
+                placeholder="שם משתמש"
+                {...register("username", { required: "שדה חובה" })}
+              />
+              {errors.username && (
+                <ErrorMessage>{errors.username.message}</ErrorMessage>
+              )}
+              <StyledInput
+                placeholder="שם הקובץ"
+                {...register("fileName", { required: "שדה חובה" })}
+              />
+              {errors.urlFiles && (
+                <ErrorMessage>{errors.urlFiles.message}</ErrorMessage>
+              )}
+
+              <StyledInput
+                placeholder="קישור לקובץ"
+                {...register("urlFiles", { required: "שדה חובה" })}
+              />
+              {errors.urlFiles && (
+                <ErrorMessage>{errors.urlFiles.message}</ErrorMessage>
+              )}
+
+              {/* סוג קובץ */}
+              <Controller
+                name="fileType"
+                control={control}
+                rules={{ required: "בחר סוג קובץ" }}
+                render={({ field }) => (
+                  <FormControl fullWidth sx={{ mt: 1 }}>
+                    <InputLabel id="file-type-label">סוג קובץ</InputLabel>
+                    <Select
+                      labelId="file-type-label"
+                      label="סוג קובץ"
+                      {...field}
+                    >
+                      <MenuItem value="pdf">PDF</MenuItem>
+                      <MenuItem value="png">PNG</MenuItem>
+                      <MenuItem value="doc">Word</MenuItem>
+                      <MenuItem value="link">link</MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
+              />
+              {errors.fileType && (
+                <ErrorMessage>{errors.fileType.message}</ErrorMessage>
+              )}
+
+              {serverError && <ErrorMessage>{serverError}</ErrorMessage>}
+
+              <StyledButton type="submit">צור קובץ</StyledButton>
+              <StyledButton type="button" onClick={() => setOpen(false)}>
+                יציאה
+              </StyledButton>
+            </StyledForm>
+          </LoginBox>
+        </FullScreenContainer>
       </Popper>
     </>
   );

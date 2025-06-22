@@ -1,4 +1,3 @@
-import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -10,47 +9,76 @@ import {
   StyledInput,
   Title,
 } from "./Login.styled";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
+type FormInputs = {
+  username: string;
+  password: string;
+};
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const nav = useNavigate();
+  const [serverError, setServerError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>();
 
+  const onSubmit = async (data: FormInputs) => {
     try {
-      const url = "http://localhost:3000/auth/login";
-      const res = await axios.post(url, { username, password });
+      const token = localStorage.getItem("token");
+      const res = await axios.post("http://localhost:3000/auth/login", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
+      localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      setError("");
-      nav(`/:user`);
+      setServerError("");
+      nav(`/${res.data.user.username}`);
     } catch (err) {
-      setError("שם משתשמ ו/או סיסמה שגויים");
+      setServerError("שם משתמש ו/או סיסמה שגויים");
     }
   };
 
   return (
     <FullScreenContainer>
-      <LoginBox>
+      <LoginBox style={{ position: "relative" }}>
+        <IconButton
+          onClick={() => nav("/")}
+          style={{ position: "absolute", top: 8, left: 8 }}
+          aria-label="סגור"
+        >
+          <CloseIcon />
+        </IconButton>
+
         <Title>התחברות</Title>
-        <StyledForm onSubmit={handleSubmit}>
+        <StyledForm onSubmit={handleSubmit(onSubmit)} noValidate>
           <StyledInput
             placeholder="שם משתמש"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
+            {...register("username", { required: "שדה חובה" })}
           />
+          {errors.username && (
+            <ErrorMessage>{errors.username.message}</ErrorMessage>
+          )}
+
           <StyledInput
             type="password"
             placeholder="סיסמה"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            {...register("password", { required: "שדה חובה" })}
           />
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {errors.password && (
+            <ErrorMessage>{errors.password.message}</ErrorMessage>
+          )}
+
+          {serverError && <ErrorMessage>{serverError}</ErrorMessage>}
+
           <StyledButton type="submit">התחבר</StyledButton>
         </StyledForm>
       </LoginBox>
