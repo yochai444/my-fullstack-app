@@ -3,12 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import StudentPage from "./StudentPage";
 import AdminPage from "./AdminPage";
-
-interface IUserToken {
-  role: string;
-  name: string;
-  sub: string;
-}
+import type { IUserToken } from "../utils";
 
 export default function MainPage() {
   const navigate = useNavigate();

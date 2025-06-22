@@ -20,12 +20,12 @@ import {
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 
-type FormInputs = {
+interface IFormInputs {
   username: string;
   urlFiles: string;
   fileType: string;
   fileName: string;
-};
+}
 
 export default function AddFilesButton() {
   const [open, setOpen] = useState(false);
@@ -37,11 +37,11 @@ export default function AddFilesButton() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormInputs>({
+  } = useForm<IFormInputs>({
     defaultValues: { username: "", urlFiles: "", fileType: "", fileName: "" },
   });
 
-  const onSubmit = async (data: FormInputs) => {
+  const onSubmit = async (data: IFormInputs) => {
     try {
       const token = localStorage.getItem("token");
       await axios.post("http://localhost:3000/files/upload", data, {

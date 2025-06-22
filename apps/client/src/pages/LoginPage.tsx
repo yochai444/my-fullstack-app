@@ -14,10 +14,10 @@ import { useState } from "react";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-type FormInputs = {
+interface IFormInputs {
   username: string;
   password: string;
-};
+}
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -27,9 +27,9 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>();
+  } = useForm<IFormInputs>();
 
-  const onSubmit = async (data: FormInputs) => {
+  const onSubmit = async (data: IFormInputs) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post("http://localhost:3000/auth/login", data, {
@@ -41,7 +41,7 @@ export default function LoginPage() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setServerError("");
-      nav(`/${res.data.user.username}`);
+      nav(`/:user`);
     } catch (err) {
       setServerError("שם משתמש ו/או סיסמה שגויים");
     }

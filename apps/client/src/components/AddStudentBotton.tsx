@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { useForm } from "react-hook-form";
 
-type FormInputs = {
+interface IFormInputs  {
   username: string;
   password: string;
 };
@@ -27,9 +27,9 @@ export default function AddStudentButton() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormInputs>();
+  } = useForm<IFormInputs>();
 
-  const onSubmit = async (data: FormInputs) => {
+  const onSubmit = async (data: IFormInputs) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post("http://localhost:3000/users/create", data, {

@@ -23,7 +23,7 @@ export class FilesService {
 
   constructor(
     @Inject('MONGO_CLIENT') private readonly client: MongoClient,
-    private readonly userService: UserService, // ← הכנס לכאן
+    private readonly userService: UserService, 
   ) {
     const dbName = process.env.MONGO_DB_NAME;
     this.files = this.client.db(dbName).collection<Files>('files');

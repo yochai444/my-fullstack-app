@@ -8,42 +8,9 @@ import {
   CardActionArea,
   Box,
 } from "@mui/material";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import ImageIcon from "@mui/icons-material/Image";
-import VideoFileIcon from "@mui/icons-material/VideoFile";
-import LinkIcon from '@mui/icons-material/Link';
 import { jwtDecode } from "jwt-decode";
-
-interface IFileType {
-  _id: string;
-  studentId: string;
-  username: string;
-  url: string;
-  uploadedAt?: string;
-  fileType: string; 
-  fileName: string;
-}
-
-interface IUserToken {
-  role: string;
-  name: string;
-  sub: string;
-}
-
-function getFileIcon(fileType: string) {
-  
-  if (fileType === "pdf")
-    return <PictureAsPdfIcon fontSize="large" color="error" />;
-  if (["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"].includes(fileType))
-    return <ImageIcon fontSize="large" color="primary" />;
-  if (["mp4", "webm", "avi", "mov"].includes(fileType))
-    return <VideoFileIcon fontSize="large" color="secondary" />;
-  if (fileType === "link")
-    return <LinkIcon fontSize="large" color="action" />;
-
-  return <InsertDriveFileIcon fontSize="large" />;
-}
+import { FileIcon } from "../components/FileIcon";
+import type { IFileType, IUserToken } from "../utils";
 
 export default function StudentPage() {
   const [files, setFiles] = useState<IFileType[]>([]);
@@ -101,9 +68,9 @@ export default function StudentPage() {
           <Card key={f._id} sx={{ width: 200 }}>
             <CardActionArea href={f.url} target="_blank" rel="noreferrer">
               <CardContent sx={{ textAlign: "center" }}>
-                <Box mb={1}>{getFileIcon(f.fileType)}</Box>
+                <Box mb={1}>{<FileIcon fileType={f.fileType} />}</Box>
                 <Typography variant="body1" noWrap>
-                  {f.fileName }
+                  {f.fileName}
                 </Typography>
                 {f.uploadedAt && (
                   <Typography variant="caption" color="textSecondary">

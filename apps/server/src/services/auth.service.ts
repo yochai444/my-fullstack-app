@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { User } from '../types/userTypes';
 import * as jwt from 'jsonwebtoken';
 
-const JWT_SECRET = 'super-secret-key'; // העבר לקובץ סביבה
+const JWT_SECRET = 'super-secret-key'; 
 
 @Injectable()
 export class AuthService {

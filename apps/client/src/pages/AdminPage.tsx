@@ -2,12 +2,8 @@ import { Box, Typography } from "@mui/material";
 import AddStudentButton from "../components/AddStudentBotton";
 import AddFilesButton from "../components/AddFilesBotton";
 import { jwtDecode } from "jwt-decode";
+import type { IUserToken } from "../utils";
 
-interface IUserToken {
-  role: string;
-  name: string;
-  sub: string;
-}
 
 export default function AdminPage() {
   let userToken: IUserToken | null = null;
