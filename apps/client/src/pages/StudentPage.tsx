@@ -11,6 +11,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import { FileIcon } from "../components/FileIcon";
 import type { IFileType, IUserToken } from "../utils";
+import LogoButton from "../components/LogoBotton";
 
 export default function StudentPage() {
   const [files, setFiles] = useState<IFileType[]>([]);
@@ -52,12 +53,8 @@ export default function StudentPage() {
   return (
     <>
       <Box sx={{ direction: "rtl", fontFamily: "system-ui" }}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          padding={2}
-        >
+        <Box display="flex" alignItems="center" padding={2}>
+          <LogoButton />
           <Typography variant="h5" fontFamily="system-ui" fontSize="24px">
             {`היי ${userToken.name}`}
           </Typography>

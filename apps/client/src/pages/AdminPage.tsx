@@ -3,7 +3,7 @@ import AddStudentButton from "../components/AddStudentBotton";
 import AddFilesButton from "../components/AddFilesBotton";
 import { jwtDecode } from "jwt-decode";
 import type { IUserToken } from "../utils";
-
+import LogoButton from "../components/LogoBotton";
 
 export default function AdminPage() {
   let userToken: IUserToken | null = null;
@@ -27,12 +27,8 @@ export default function AdminPage() {
 
   return (
     <Box sx={{ direction: "rtl", fontFamily: "system-ui" }}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        padding={2}
-      >
+      <Box display="flex" alignItems="center" padding={2}>
+        <LogoButton />
         <Typography variant="h5" fontFamily="system-ui" fontSize="24px">
           {`היי ${userToken.name}`}
         </Typography>

@@ -1,6 +1,7 @@
 import { Box, Typography, Stack } from "@mui/material";
 import StudentLogButton from "../components/StudentLoginButton";
 import SidebarMenu from "../components/SidebarMenu";
+import LogoButton from "../components/LogoBotton";
 
 export default function HomePage() {
   return (
@@ -11,9 +12,7 @@ export default function HomePage() {
         alignItems="center"
         padding={2}
       >
-        <Typography variant="h5" fontFamily="system-ui" fontSize="24px">
-          לומדים עם מישל🧑‍🏫
-        </Typography>
+        <LogoButton />
         <StudentLogButton />
       </Box>
       <Box

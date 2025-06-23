@@ -19,8 +19,6 @@ const extractGoogleFileId = (url: string): string | null => {
 
 export function getGoogleDownloadUrl(fileId: string, fileType: string): string {
   const trimmedType = fileType.toLowerCase().trim();
-
-  // סוגי קבצי Google Docs (נדרשים קישורי export מיוחדים)
   const googleDocTypes: Record<string, { base: string; format: string }> = {
     doc: {
       base: 'https://docs.google.com/document/d',
@@ -36,13 +34,11 @@ export function getGoogleDownloadUrl(fileId: string, fileType: string): string {
     },
   };
 
-  // אם מדובר בקובץ Google Docs
   if (trimmedType in googleDocTypes) {
     const { base, format } = googleDocTypes[trimmedType];
     return `${base}/${fileId}/export?format=${format}`;
   }
 
-  // קבצים רגילים (PDF, ZIP, תמונה, MP4 וכו')
   return `https://drive.google.com/uc?export=download&id=${fileId}`;
 }
 
