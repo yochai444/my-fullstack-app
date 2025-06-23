@@ -59,6 +59,7 @@ export class FilesService {
     url: string,
     fileType: string,
     fileName: string,
+    folderName: string | null 
   ) {
     const student = await this.userService.findByUsername(username);
     if (!student) throw new NotFoundException('תלמיד לא קיים');
@@ -70,6 +71,7 @@ export class FilesService {
       uploadedAt: new Date(),
       fileType,
       fileName,
+      folder: folderName || null,
     });
 
     return { message: 'הקובץ נשמר לתלמיד' };

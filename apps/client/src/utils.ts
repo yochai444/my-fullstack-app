@@ -6,6 +6,7 @@ export interface IFileType {
     uploadedAt?: string;
     fileType: string;
     fileName: string;
+    folder?: string | null;
   }
   
   export interface IUserToken {

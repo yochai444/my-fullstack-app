@@ -27,11 +27,18 @@ export default function AdminPage() {
 
   return (
     <Box sx={{ direction: "rtl", fontFamily: "system-ui" }}>
-      <Box display="flex" alignItems="center" padding={2}>
-        <LogoButton />
-        <Typography variant="h5" fontFamily="system-ui" fontSize="24px">
-          {`היי ${userToken.name}`}
-        </Typography>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        padding={2}
+      >
+        <Box display="flex" alignItems="center" gap={2}>
+          <LogoButton />
+          <Typography variant="h5" fontFamily="system-ui" fontSize="24px">
+            {`היי ${userToken.name}`}
+          </Typography>
+        </Box>
         <Box display="flex" gap={2}>
           <AddStudentButton />
           <AddFilesButton />

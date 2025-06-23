@@ -25,6 +25,7 @@ interface IFormInputs {
   urlFiles: string;
   fileType: string;
   fileName: string;
+  folderName: string | null;
 }
 
 export default function AddFilesButton() {
@@ -38,7 +39,12 @@ export default function AddFilesButton() {
     reset,
     formState: { errors },
   } = useForm<IFormInputs>({
-    defaultValues: { username: "", urlFiles: "", fileType: "", fileName: "" },
+    defaultValues: {
+      username: "",
+      urlFiles: "",
+      fileType: "",
+      fileName: "",
+    },
   });
 
   const onSubmit = async (data: IFormInputs) => {
@@ -92,6 +98,21 @@ export default function AddFilesButton() {
               {errors.username && (
                 <ErrorMessage>{errors.username.message}</ErrorMessage>
               )}
+              <Controller
+                name="folderName"
+                control={control}
+                render={({ field }) => (
+                  <FormControl fullWidth sx={{ mt: 1 }}>
+                    <InputLabel id="file-type-label">תיקייה</InputLabel>
+                    <Select labelId="file-type-label" label="תיקייה" {...field}>
+                      <MenuItem value="gramer">דיקדוק</MenuItem>
+                      <MenuItem value="test">מיצב</MenuItem>
+                      <MenuItem value="workshit">דפי עבודה</MenuItem>
+                      <MenuItem value="plaies">פעילויות</MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
+              />
               <StyledInput
                 placeholder="שם הקובץ"
                 {...register("fileName", { required: "שדה חובה" })}

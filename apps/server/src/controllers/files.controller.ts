@@ -15,6 +15,7 @@ export class FilesController {
       urlFiles: string;
       fileType: string;
       fileName: string;
+      folderName: string | null;
     },
   ) {
     return this.filesService.uploadForStudent(
@@ -22,6 +23,7 @@ export class FilesController {
       body.urlFiles,
       body.fileType,
       body.fileName,
+      body.folderName ,
     );
   }
 

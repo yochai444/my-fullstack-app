@@ -8,9 +8,6 @@ export default function LogoButton() {
       onClick={() => navigate("/")}
       sx={{
         borderRadius: "12px",
-        "&:hover": {
-          boxShadow: 4,
-        },
       }}
     >
       <img
