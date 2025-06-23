@@ -17,13 +17,42 @@ const extractGoogleFileId = (url: string): string | null => {
   return match ? match[1] : null;
 };
 
+export function getGoogleDownloadUrl(fileId: string, fileType: string): string {
+  const trimmedType = fileType.toLowerCase().trim();
+
+  // סוגי קבצי Google Docs (נדרשים קישורי export מיוחדים)
+  const googleDocTypes: Record<string, { base: string; format: string }> = {
+    doc: {
+      base: 'https://docs.google.com/document/d',
+      format: 'docx',
+    },
+    sheet: {
+      base: 'https://docs.google.com/spreadsheets/d',
+      format: 'xlsx',
+    },
+    slide: {
+      base: 'https://docs.google.com/presentation/d',
+      format: 'pptx',
+    },
+  };
+
+  // אם מדובר בקובץ Google Docs
+  if (trimmedType in googleDocTypes) {
+    const { base, format } = googleDocTypes[trimmedType];
+    return `${base}/${fileId}/export?format=${format}`;
+  }
+
+  // קבצים רגילים (PDF, ZIP, תמונה, MP4 וכו')
+  return `https://drive.google.com/uc?export=download&id=${fileId}`;
+}
+
 @Injectable()
 export class FilesService {
   private files;
 
   constructor(
     @Inject('MONGO_CLIENT') private readonly client: MongoClient,
-    private readonly userService: UserService, 
+    private readonly userService: UserService,
   ) {
     const dbName = process.env.MONGO_DB_NAME;
     this.files = this.client.db(dbName).collection<Files>('files');
@@ -56,7 +85,9 @@ export class FilesService {
     files.forEach((file) => {
       if (file.fileType === 'link') return file;
       const id = extractGoogleFileId(file.url);
-      file.url = `https://drive.google.com/uc?export=download&id=${id}`;
+      if (!id) return file;
+      const newUrl = getGoogleDownloadUrl(id, file.fileType);
+      file.url = newUrl;
     });
 
     return files;

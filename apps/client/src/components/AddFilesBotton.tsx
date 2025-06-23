@@ -123,7 +123,7 @@ export default function AddFilesButton() {
                     >
                       <MenuItem value="pdf">PDF</MenuItem>
                       <MenuItem value="png">PNG</MenuItem>
-                      <MenuItem value="doc">Word</MenuItem>
+                      <MenuItem value="doc">docx</MenuItem>
                       <MenuItem value="link">link</MenuItem>
                     </Select>
                   </FormControl>
