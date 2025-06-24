@@ -157,9 +157,6 @@ export default function AddFilesButton() {
               {serverError && <ErrorMessage>{serverError}</ErrorMessage>}
 
               <StyledButton type="submit">צור קובץ</StyledButton>
-              <StyledButton type="button" onClick={() => setOpen(false)}>
-                יציאה
-              </StyledButton>
             </StyledForm>
           </LoginBox>
         </FullScreenContainer>

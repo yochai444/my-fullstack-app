@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { MongoClient, ObjectId } from 'mongodb';
 import { User } from '../types/userTypes';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -20,10 +21,11 @@ export class UserService {
   }
 
   async createUser(username: string, password: string): Promise<User> {
+    const passwordHash = await bcrypt.hash(password, 10);
     const newUser: User = {
       _id: new ObjectId(),
       name: username,
-      password: password,
+      password: passwordHash,
       role: 'student',
     };
     const res = await this.users.insertOne(newUser);
@@ -36,8 +38,10 @@ export class UserService {
 
   async verifyUser(username: string, password: string): Promise<User | null> {
     const user = await this.findByUsername(username);
-    if (user && user.password === password) {
-      return user;
+
+    if (user && user.password) {
+      const passwordValid = await bcrypt.compare(password, user.password);
+      if (passwordValid) return user;
     }
     return null;
   }
